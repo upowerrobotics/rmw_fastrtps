@@ -55,6 +55,31 @@ _assign_message_info(
     sender_gid->data);
 }
 
+static void log_timestamp_for_fabric(
+  const rmw_message_info_t * info,
+  const rmw_subscription_t * subscription)
+{
+  auto now = std::chrono::system_clock::now();
+  int64_t now_timestamp =
+    std::chrono::time_point_cast<std::chrono::nanoseconds>(now).time_since_epoch().count();
+  int64_t timestamp_diff = now_timestamp - info->source_timestamp;
+
+  std::string log_message = "Topic: " + std::string(subscription->topic_name) +
+    ", rmw xmt time ns: " + std::to_string(timestamp_diff) + ". RMWPUB TS: " +
+    std::to_string(info->source_timestamp) + ", RMWSUB TS: " + std::to_string(now_timestamp);
+
+  std::vector<std::string> substrings;
+  substrings.reserve(2);
+  std::istringstream iss(std::string(subscription->topic_name));
+  std::string token;
+  while (std::getline(iss, token, '/')) {
+    substrings.push_back(std::move(token));
+  }
+  auto nodename = substrings[1] + ".rmw";
+
+  RCUTILS_LOG_DEBUG_NAMED(nodename.c_str(), log_message.c_str());
+}
+
 rmw_ret_t
 _take(
   const char * identifier,
@@ -101,6 +126,7 @@ _take(
       if (sinfo.valid_data) {
         if (message_info) {
           _assign_message_info(identifier, message_info, &sinfo);
+          log_timestamp_for_fabric(message_info, subscription);
         }
         *taken = true;
         break;
