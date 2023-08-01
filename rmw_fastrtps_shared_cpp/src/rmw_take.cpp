@@ -40,6 +40,7 @@
 #include "tracetools/tracetools.h"
 
 #include "rcpputils/scope_exit.hpp"
+#include "fabric_rmw/fabric_functions.hpp"
 
 namespace rmw_fastrtps_shared_cpp
 {
@@ -119,6 +120,7 @@ _take(
     if (info_seq[0].valid_data) {
       if (message_info) {
         _assign_message_info(identifier, message_info, &info_seq[0]);
+        fabric_functions::fabric_logger(message_info, subscription, "FastRTPS");
       }
       *taken = true;
       break;
