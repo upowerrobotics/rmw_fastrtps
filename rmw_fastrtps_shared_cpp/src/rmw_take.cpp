@@ -68,16 +68,7 @@ static void log_timestamp_for_fabric(
     ", rmw xmt time ns: " + std::to_string(timestamp_diff) + ". RMWPUB TS: " +
     std::to_string(info->source_timestamp) + ", RMWSUB TS: " + std::to_string(now_timestamp);
 
-  std::vector<std::string> substrings;
-  substrings.reserve(2);
-  std::istringstream iss(std::string(subscription->topic_name));
-  std::string token;
-  while (std::getline(iss, token, '/')) {
-    substrings.push_back(std::move(token));
-  }
-  auto nodename = substrings[1] + ".rmw";
-
-  RCUTILS_LOG_DEBUG_NAMED(nodename.c_str(), log_message.c_str());
+  RCUTILS_LOG_DEBUG_NAMED("rmw.FastRTPS", log_message.c_str());
 }
 
 rmw_ret_t
