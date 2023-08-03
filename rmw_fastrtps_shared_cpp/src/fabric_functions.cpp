@@ -18,12 +18,14 @@
 
 namespace fabric_functions
 {
-FabricLogger::FabricLogger(const dds_sample_info_t info_, const rmw_subscription_t * subscription_)
-: timestamp(info_.source_timestamp), subscription(subscription_), dds_name("rmw.cyclonedds") {}
-FabricLogger::FabricLogger(
-  const rmw_message_info_t * info_,
-  const rmw_subscription_t * subscription_)
-: timestamp(info_->source_timestamp), subscription(subscription_), dds_name("rmw.FastRTPS") {}
+FabricLogger::FabricLogger(const dds_sample_info_t info_,
+                           const rmw_subscription_t * subscription_,
+                           const std::string dds_name_)
+: timestamp(info_.source_timestamp), subscription(subscription_), dds_name(dds_name_) {}
+FabricLogger::FabricLogger(const rmw_message_info_t * info_,
+                           const rmw_subscription_t * subscription_,
+                           const std::string dds_name_)
+: timestamp(info_->source_timestamp), subscription(subscription_), dds_name(dds_name_) {}
 
 void FabricLogger::get_log()
 {

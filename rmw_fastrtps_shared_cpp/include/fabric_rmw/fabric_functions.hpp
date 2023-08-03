@@ -33,8 +33,12 @@ private:
   const std::string dds_name;
 
 public:
-  FabricLogger(const dds_sample_info_t info_, const rmw_subscription_t * subscription_);
-  FabricLogger(const rmw_message_info_t * info_, const rmw_subscription_t * subscription_);
+  FabricLogger(const dds_sample_info_t info_,
+               const rmw_subscription_t * subscription_,
+               const std::string dds_name_);
+  FabricLogger(const rmw_message_info_t * info_,
+               const rmw_subscription_t * subscription_,
+               const std::string dds_name_);
   void get_log();
 };
 
