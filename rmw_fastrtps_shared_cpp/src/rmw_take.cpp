@@ -103,8 +103,7 @@ _take(
       if (sinfo.valid_data) {
         if (message_info) {
           _assign_message_info(identifier, message_info, &sinfo);
-          fabric_functions::FabricLogger fabric_logger(message_info, subscription, "FastRTPS");
-          fabric_logger.get_log();
+          fabric_functions::fabric_logger(message_info, subscription, "FastRTPS");
         }
         *taken = true;
         break;
