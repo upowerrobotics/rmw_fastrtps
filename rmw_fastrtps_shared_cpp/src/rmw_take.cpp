@@ -33,6 +33,8 @@
 #include "rmw_fastrtps_shared_cpp/TypeSupport.hpp"
 #include "rmw_fastrtps_shared_cpp/utils.hpp"
 
+#include "fabric_rmw/fabric_functions.hpp"
+
 namespace rmw_fastrtps_shared_cpp
 {
 
@@ -53,22 +55,6 @@ _assign_message_info(
   rmw_fastrtps_shared_cpp::copy_from_fastrtps_guid_to_byte_array(
     sinfo->sample_identity.writer_guid(),
     sender_gid->data);
-}
-
-static void log_timestamp_for_fabric(
-  const rmw_message_info_t * info,
-  const rmw_subscription_t * subscription)
-{
-  auto now = std::chrono::system_clock::now();
-  int64_t now_timestamp =
-    std::chrono::time_point_cast<std::chrono::nanoseconds>(now).time_since_epoch().count();
-  int64_t timestamp_diff = now_timestamp - info->source_timestamp;
-
-  std::string log_message = "Topic: " + std::string(subscription->topic_name) +
-    ", rmw xmt time ns: " + std::to_string(timestamp_diff) + ". RMWPUB TS: " +
-    std::to_string(info->source_timestamp) + ", RMWSUB TS: " + std::to_string(now_timestamp);
-
-  RCUTILS_LOG_DEBUG_NAMED("rmw.FastRTPS", log_message.c_str());
 }
 
 rmw_ret_t
@@ -117,7 +103,8 @@ _take(
       if (sinfo.valid_data) {
         if (message_info) {
           _assign_message_info(identifier, message_info, &sinfo);
-          log_timestamp_for_fabric(message_info, subscription);
+          fabric_functions::FabricLogger fabric_logger(message_info, subscription);
+          fabric_logger.get_log();
         }
         *taken = true;
         break;
