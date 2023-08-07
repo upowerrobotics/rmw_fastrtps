@@ -25,6 +25,15 @@
 namespace fabric_functions
 {
 
+/**
+ * @brief Custom logger function for fabric-specific logging.
+ *
+ * This function logs information related to received messages from a subscription.
+ *
+ * @param info_ Pointer to the rmw_message_info_t structure that contains message information.
+ * @param subscription_ Pointer to the rmw_subscription_t structure representing the subscription.
+ * @param dds_name_ The name of the DDS entity for logging purposes.
+ */
 void fabric_logger(
   const rmw_message_info_t * info_,
   const rmw_subscription_t * subscription_,
