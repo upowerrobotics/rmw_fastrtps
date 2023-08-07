@@ -88,7 +88,6 @@ add_library(rmw_fastrtps_shared_cpp
   src/subscription.cpp
   src/TypeSupport_impl.cpp
   src/utils.cpp
-  src/fabric_functions.cpp
 )
 target_include_directories(rmw_fastrtps_shared_cpp
   PUBLIC
